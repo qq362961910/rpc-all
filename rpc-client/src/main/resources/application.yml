@@ -1,0 +1,9 @@
+server:
+  port: 8080
+
+rpc:
+  app:
+    base-packages: "cn.t.rpc.client"
+  server:
+    host: 127.0.0.1
+    port: 3000
