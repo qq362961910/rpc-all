@@ -18,7 +18,7 @@ public class ZookeeperTemplate implements Watcher {
      *   * 超时时间
      *   
      */
-    private static final int SESSION_TIME_OUT = 2000;
+    private static final int SESSION_TIME_OUT = 10000;
     private CountDownLatch countDownLatch = new CountDownLatch(1);
 
     @Override

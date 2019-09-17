@@ -11,6 +11,7 @@
     <modules>
         <module>rpc-core</module>
         <module>rpc-client</module>
+        <module>rpc-admin</module>
     </modules>
 
     <properties>

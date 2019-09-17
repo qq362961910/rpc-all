@@ -5,6 +5,8 @@ import cn.t.rpc.core.network.SimpleDecoder;
 import cn.t.rpc.core.network.SimpleEncoder;
 import cn.t.rpc.core.network.SimpleHandler;
 import cn.t.rpc.core.zookeeper.ZookeeperTemplate;
+import cn.t.util.common.JsonUtil;
+import cn.t.util.common.StringUtil;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.ChannelFuture;
@@ -23,7 +25,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
@@ -78,9 +82,32 @@ public class RemoteService implements ApplicationListener<ContextRefreshedEvent>
             channelFuture.syncUninterruptibly();
             channelFuture.addListener(f -> {
                 List<String> nodes = zookeeperTemplate.getChildren("/");
-                if(!nodes.contains("/rpc")) {
-                    zookeeperTemplate.createNode("/rpc", interfaceName);
-                    zookeeperTemplate.createNode("/rpc/services", interfaceName);
+                Set<RpcServiceConfig.Server> serviceHostSet = new HashSet<>();
+                serviceHostSet.add(server);
+                if(!nodes.contains("rpc")) {
+                    zookeeperTemplate.createNode("/rpc", "");
+                    zookeeperTemplate.createNode("/rpc/services", "");
+                    zookeeperTemplate.createNode("/rpc/services/" + interfaceName, JsonUtil.serialize(serviceHostSet));
+                } else {
+                    List<String> serviceNodes = zookeeperTemplate.getChildren("/rpc");
+                    if(!serviceNodes.contains("services")) {
+                        zookeeperTemplate.createNode("/rpc/services", "");
+                        zookeeperTemplate.createNode("/rpc/services/" + interfaceName, JsonUtil.serialize(serviceHostSet));
+                    } else {
+                        List<String> interfaceNodes = zookeeperTemplate.getChildren("/rpc/services");
+                        if(!interfaceNodes.contains(interfaceName)) {
+                            zookeeperTemplate.createNode("/rpc/services/" + interfaceName, JsonUtil.serialize(serviceHostSet));
+                        } else {
+                            String data = zookeeperTemplate.getData("/rpc/services/" + interfaceName);
+                            if(StringUtil.isEmpty(data)) {
+                                zookeeperTemplate.setData("/rpc/services/" + interfaceName, JsonUtil.serialize(serviceHostSet));
+                            } else {
+                                HashSet<RpcServiceConfig.Server> oldSet = JsonUtil.deserialize(data, HashSet.class);
+                                oldSet.addAll(serviceHostSet);
+                                zookeeperTemplate.setData("/rpc/services/" + interfaceName, JsonUtil.serialize(oldSet));
+                            }
+                        }
+                    }
                 }
             });
             channelFuture.channel().closeFuture().addListener(f -> {
