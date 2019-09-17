@@ -9,8 +9,11 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * @author: yj
  **/
 @ConfigurationProperties(prefix = RpcConfigTool.PREFIX)
-public class RemoteServiceServerConfig {
+public class RpcServiceConfig {
+
     private Server server;
+
+    private Zookeeper zookeeper;
 
     public Server getServer() {
         return server;
@@ -18,6 +21,26 @@ public class RemoteServiceServerConfig {
 
     public void setServer(Server server) {
         this.server = server;
+    }
+
+    public Zookeeper getZookeeper() {
+        return zookeeper;
+    }
+
+    public void setZookeeper(Zookeeper zookeeper) {
+        this.zookeeper = zookeeper;
+    }
+
+    public static class Zookeeper {
+        private String registerAddress;
+
+        public String getRegisterAddress() {
+            return registerAddress;
+        }
+
+        public void setRegisterAddress(String registerAddress) {
+            this.registerAddress = registerAddress;
+        }
     }
 
     public static class Server {
