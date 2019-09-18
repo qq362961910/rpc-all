@@ -7,9 +7,19 @@ package cn.t.rpc.core.service;
  **/
 public class RemoteServiceConsumerBean {
 
+    private ClassLoader classLoader;
+
     private transient volatile Class interfaceClass;
 
     private String registryAddress;
+
+    public ClassLoader getClassLoader() {
+        return classLoader;
+    }
+
+    public void setClassLoader(ClassLoader classLoader) {
+        this.classLoader = classLoader;
+    }
 
     public Class getInterfaceClass() {
         return interfaceClass;

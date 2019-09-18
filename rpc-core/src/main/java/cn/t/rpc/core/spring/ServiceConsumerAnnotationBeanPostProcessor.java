@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.PropertyValues;
+import org.springframework.beans.factory.BeanClassLoaderAware;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.annotation.InjectionMetadata;
 import org.springframework.beans.factory.config.InstantiationAwareBeanPostProcessorAdapter;
@@ -21,9 +22,11 @@ import java.util.List;
  * create: 2019-09-18 10:47
  * @author: yj
  **/
-public class ServiceConsumerAnnotationBeanPostProcessor extends InstantiationAwareBeanPostProcessorAdapter {
+public class ServiceConsumerAnnotationBeanPostProcessor extends InstantiationAwareBeanPostProcessorAdapter implements BeanClassLoaderAware {
 
     private static final Logger logger = LoggerFactory.getLogger(ServiceConsumerAnnotationBeanPostProcessor.class);
+
+    private ClassLoader classLoader;
 
     @Override
     public PropertyValues postProcessProperties(PropertyValues pvs, Object bean, String beanName) throws BeansException {
@@ -39,6 +42,7 @@ public class ServiceConsumerAnnotationBeanPostProcessor extends InstantiationAwa
                 }
                 RemoteServiceConsumerBean remoteServiceConsumerBean = new RemoteServiceConsumerBean();
                 remoteServiceConsumerBean.setInterfaceClass(annotation.interfaceClass());
+                remoteServiceConsumerBean.setClassLoader(classLoader);
                 elements.add(new ServiceConsumerAnnotationInjectedElement(remoteServiceConsumerBean, field, null));
             }
         });
@@ -53,4 +57,8 @@ public class ServiceConsumerAnnotationBeanPostProcessor extends InstantiationAwa
         return pvs;
     }
 
+    @Override
+    public void setBeanClassLoader(ClassLoader classLoader) {
+        this.classLoader = classLoader;
+    }
 }

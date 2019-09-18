@@ -16,11 +16,10 @@ import java.util.concurrent.ConcurrentMap;
  * create: 2019-09-18 10:56
  * @author: yj
  **/
-public class ServiceConsumerAnnotationInjectedElement extends InjectionMetadata.InjectedElement implements BeanClassLoaderAware {
+public class ServiceConsumerAnnotationInjectedElement extends InjectionMetadata.InjectedElement {
 
     private static final Logger logger = LoggerFactory.getLogger(ServiceConsumerAnnotationInjectedElement.class);
 
-    private ClassLoader classLoader;
     private RemoteServiceConsumerBean remoteServiceConsumerBean;
 
     private final ConcurrentMap<String, Object> injectedObjectsCache = new ConcurrentHashMap<>(32);
@@ -48,13 +47,8 @@ public class ServiceConsumerAnnotationInjectedElement extends InjectionMetadata.
         return null;
     }
 
-    @Override
-    public void setBeanClassLoader(ClassLoader classLoader) {
-        this.classLoader = classLoader;
-    }
-
     private Object buildProxy(RemoteServiceConsumerBean remoteServiceConsumerBean) {
-        return Proxy.newProxyInstance(classLoader, new Class[]{remoteServiceConsumerBean.getInterfaceClass()}, new ReferenceBeanInvocationHandler(remoteServiceConsumerBean));
+        return Proxy.newProxyInstance(remoteServiceConsumerBean.getClassLoader(), new Class[]{remoteServiceConsumerBean.getInterfaceClass()}, new ReferenceBeanInvocationHandler(remoteServiceConsumerBean));
     }
 
     private static class ReferenceBeanInvocationHandler implements InvocationHandler {
