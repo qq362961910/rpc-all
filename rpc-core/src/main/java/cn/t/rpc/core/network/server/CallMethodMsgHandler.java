@@ -1,6 +1,7 @@
 package cn.t.rpc.core.network.server;
 
 import cn.t.rpc.core.network.msg.CallMethodMsg;
+import cn.t.rpc.core.network.msg.CallMethodResultMsg;
 import cn.t.rpc.core.service.RemoteServiceManager;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -31,13 +32,20 @@ public class CallMethodMsgHandler extends SimpleChannelInboundHandler<CallMethod
         } else {
             try {
                 Method method;
+                Object result;
                 if(msg.getArg() == null) {
                     method = ref.getClass().getDeclaredMethod(msg.getMethodName());
-                    method.invoke(ref);
+                    result = method.invoke(ref);
                 } else {
                     method = ref.getClass().getDeclaredMethod(msg.getMethodName(), msg.getArg().getClass());
-                    method.invoke(ref, msg.getArg());
+                    result = method.invoke(ref, msg.getArg());
                 }
+                CallMethodResultMsg callMethodResultMsg = new CallMethodResultMsg();
+                callMethodResultMsg.setId(msg.getId());
+                callMethodResultMsg.setInterfaceName(msg.getInterfaceName());
+                callMethodResultMsg.setMethodName(msg.getMethodName());
+                callMethodResultMsg.setResult(result);
+                ctx.writeAndFlush(callMethodResultMsg);
             } catch (NoSuchMethodException e) {
                 logger.error("未找到服务方法", e);
                 //todo 响应客户端: 异常
