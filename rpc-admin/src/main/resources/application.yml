@@ -1,0 +1,11 @@
+server:
+  port: 8081
+
+rpc:
+  zookeeper:
+    registerAddress: 127.0.0.1:2181
+
+spring:
+  thymeleaf:
+    cache: false
+

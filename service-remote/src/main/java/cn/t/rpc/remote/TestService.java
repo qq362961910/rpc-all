@@ -1,4 +1,4 @@
-package cn.t.rpc.client.service;
+package cn.t.rpc.remote;
 
 /**
  * @description: 测试服务
@@ -6,4 +6,5 @@ package cn.t.rpc.client.service;
  * @author: yj
  **/
 public interface TestService {
+    String whoRu();
 }

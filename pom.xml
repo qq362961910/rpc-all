@@ -12,6 +12,7 @@
         <module>rpc-core</module>
         <module>rpc-client</module>
         <module>rpc-admin</module>
+        <module>service-remote</module>
     </modules>
 
     <properties>
@@ -46,6 +47,11 @@
             <dependency>
                 <groupId>cn.t</groupId>
                 <artifactId>rpc-core</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.t</groupId>
+                <artifactId>service-remote</artifactId>
                 <version>1.0-SNAPSHOT</version>
             </dependency>
             <dependency>

@@ -20,5 +20,9 @@
             <groupId>cn.t</groupId>
             <artifactId>rpc-core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>cn.t</groupId>
+            <artifactId>service-remote</artifactId>
+        </dependency>
     </dependencies>
 </project>

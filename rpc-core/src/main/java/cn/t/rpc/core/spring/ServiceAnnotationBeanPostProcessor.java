@@ -1,13 +1,12 @@
 package cn.t.rpc.core.spring;
 
-import cn.t.rpc.core.util.RpcConfigTool;
 import cn.t.rpc.core.service.RemoteService;
-import cn.t.rpc.core.service.RpcService;
+import cn.t.rpc.core.service.RpcServiceProvider;
+import cn.t.rpc.core.util.RpcConfigTool;
 import cn.t.util.common.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.MutablePropertyValues;
 import org.springframework.beans.factory.BeanClassLoaderAware;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
@@ -51,7 +50,7 @@ public class ServiceAnnotationBeanPostProcessor implements BeanDefinitionRegistr
         RpcServiceClassPathBeanDefinitionScanner scanner = new RpcServiceClassPathBeanDefinitionScanner(registry, environment, resourceLoader);
         BeanNameGenerator beanNameGenerator = resolveBeanNameGenerator(registry);
         scanner.setBeanNameGenerator(beanNameGenerator);
-        scanner.addIncludeFilter(new AnnotationTypeFilter(RpcService.class));
+        scanner.addIncludeFilter(new AnnotationTypeFilter(RpcServiceProvider.class));
 
         String basePackages = environment.getProperty(RpcConfigTool.getBasePackages());
         if(!StringUtil.isEmpty(basePackages)) {
@@ -64,8 +63,8 @@ public class ServiceAnnotationBeanPostProcessor implements BeanDefinitionRegistr
                 if (!CollectionUtils.isEmpty(beanDefinitionHolders)) {
                     for (BeanDefinitionHolder beanDefinitionHolder : beanDefinitionHolders) {
                         Class<?> beanClass = ClassUtils.resolveClassName(beanDefinitionHolder.getBeanDefinition().getBeanClassName(), classLoader);
-                        RpcService rpcService = findAnnotation(beanClass, RpcService.class);
-                        Class<?> interfaceClass = rpcService.interfaceClass();
+                        RpcServiceProvider rpcServiceProvider = findAnnotation(beanClass, RpcServiceProvider.class);
+                        Class<?> interfaceClass = rpcServiceProvider.interfaceClass();
                         String annotatedServiceBeanName = beanDefinitionHolder.getBeanName();
                         BeanDefinitionBuilder builder = rootBeanDefinition(RemoteService.class);
                         AbstractBeanDefinition serviceBeanDefinition = builder.getBeanDefinition();

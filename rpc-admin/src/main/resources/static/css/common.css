@@ -1,0 +1,17 @@
+.container {
+    width: 1000px;
+    margin: 0 auto;
+    border: 1px black solid;
+}
+
+.container h2 {
+    text-align: center;
+}
+
+table > tr > td:nth-child(1) {
+    column-span: 3;
+}
+table > tr > td:nth-child(2) {
+    column-span: 3;
+}
+
