@@ -1,24 +1,17 @@
 package cn.t.rpc.core.service;
 
 import cn.t.rpc.core.network.RpcServiceConfig;
-import cn.t.rpc.core.network.SimpleDecoder;
-import cn.t.rpc.core.network.SimpleEncoder;
-import cn.t.rpc.core.network.SimpleHandler;
+import cn.t.rpc.core.network.server.RpcSeverNettyChannelInitializer;
 import cn.t.rpc.core.zookeeper.ZookeeperTemplate;
 import cn.t.util.common.JsonUtil;
 import cn.t.util.common.StringUtil;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.logging.LogLevel;
-import io.netty.handler.logging.LoggingHandler;
-import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.concurrent.DefaultThreadFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,8 +21,6 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 /**
  * @description: 远程调用服务
@@ -66,17 +57,7 @@ public class RemoteServiceProviderBean implements ApplicationListener<ContextRef
                 .childOption(ChannelOption.TCP_NODELAY, Boolean.TRUE)
                 .childOption(ChannelOption.SO_REUSEADDR, Boolean.TRUE)
                 .childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
-                .childHandler(new ChannelInitializer<NioSocketChannel>() {
-                    @Override
-                    protected void initChannel(NioSocketChannel ch) {
-                        ch.pipeline()
-                            .addLast("logging",new LoggingHandler(LogLevel.INFO))
-                            .addLast("decoder", new SimpleDecoder())
-                            .addLast("encoder", new SimpleEncoder())
-                            .addLast("server-idle-handler", new IdleStateHandler(0, 0, 5000, MILLISECONDS))
-                            .addLast("handler", new SimpleHandler());
-                    }
-                });
+                .childHandler(new RpcSeverNettyChannelInitializer());
             // bind
             ChannelFuture channelFuture = bootstrap.bind(server.getHost(), server.getPort());
             channelFuture.syncUninterruptibly();

@@ -36,6 +36,7 @@ public class RemoteServiceController {
 
     @GetMapping("list")
     public Object list() throws KeeperException, InterruptedException {
+        testService.whoRu();
         List<String> nodes = zookeeperTemplate.getChildren("/");
         List<String> interfaceNameList;
         if(nodes.contains("rpc") && zookeeperTemplate.getChildren("/rpc").contains("services")) {

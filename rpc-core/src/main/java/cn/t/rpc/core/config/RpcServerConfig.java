@@ -1,6 +1,7 @@
 package cn.t.rpc.core.config;
 
 import cn.t.rpc.core.network.RpcServiceConfig;
+import cn.t.rpc.core.network.client.RpcClient;
 import cn.t.rpc.core.spring.ServiceConsumerAnnotationBeanPostProcessor;
 import cn.t.rpc.core.spring.ServiceProviderAnnotationBeanPostProcessor;
 import cn.t.rpc.core.zookeeper.ZookeeperTemplate;
@@ -39,8 +40,13 @@ public class RpcServerConfig {
     }
 
     @Bean
-    public ServiceConsumerAnnotationBeanPostProcessor serviceConsumerAnnotationBeanPostProcessor() {
-        return new ServiceConsumerAnnotationBeanPostProcessor();
+    public ServiceConsumerAnnotationBeanPostProcessor serviceConsumerAnnotationBeanPostProcessor(RpcClient rpcClient) {
+        return new ServiceConsumerAnnotationBeanPostProcessor(rpcClient);
+    }
+
+    @Bean
+    public RpcClient rpcClient(ZookeeperTemplate zookeeperTemplate) {
+        return new RpcClient(zookeeperTemplate);
     }
 
 }

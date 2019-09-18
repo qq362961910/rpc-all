@@ -18,7 +18,7 @@ public class ZookeeperTemplate implements Watcher {
      *   * 超时时间
      *   
      */
-    private static final int SESSION_TIME_OUT = 10000;
+    private static final int SESSION_TIME_OUT = 100000;
     private CountDownLatch countDownLatch = new CountDownLatch(1);
 
     @Override
@@ -62,7 +62,6 @@ public class ZookeeperTemplate implements Watcher {
      *  
      */
     public List<String> getChildren(String path) throws KeeperException, InterruptedException {
-
         List<String> children = zookeeper.getChildren(path, false);
         return children;
     }

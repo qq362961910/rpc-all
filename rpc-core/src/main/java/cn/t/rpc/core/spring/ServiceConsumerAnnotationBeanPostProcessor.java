@@ -1,5 +1,6 @@
 package cn.t.rpc.core.spring;
 
+import cn.t.rpc.core.network.client.RpcClient;
 import cn.t.rpc.core.service.RemoteServiceConsumerBean;
 import cn.t.rpc.core.service.RpcServiceConsumer;
 import org.slf4j.Logger;
@@ -27,6 +28,7 @@ public class ServiceConsumerAnnotationBeanPostProcessor extends InstantiationAwa
     private static final Logger logger = LoggerFactory.getLogger(ServiceConsumerAnnotationBeanPostProcessor.class);
 
     private ClassLoader classLoader;
+    private RpcClient rpcClient;
 
     @Override
     public PropertyValues postProcessProperties(PropertyValues pvs, Object bean, String beanName) throws BeansException {
@@ -43,6 +45,7 @@ public class ServiceConsumerAnnotationBeanPostProcessor extends InstantiationAwa
                 RemoteServiceConsumerBean remoteServiceConsumerBean = new RemoteServiceConsumerBean();
                 remoteServiceConsumerBean.setInterfaceClass(annotation.interfaceClass());
                 remoteServiceConsumerBean.setClassLoader(classLoader);
+                remoteServiceConsumerBean.setRpcClient(rpcClient);
                 elements.add(new ServiceConsumerAnnotationInjectedElement(remoteServiceConsumerBean, field, null));
             }
         });
@@ -60,5 +63,9 @@ public class ServiceConsumerAnnotationBeanPostProcessor extends InstantiationAwa
     @Override
     public void setBeanClassLoader(ClassLoader classLoader) {
         this.classLoader = classLoader;
+    }
+
+    public ServiceConsumerAnnotationBeanPostProcessor(RpcClient rpcClient) {
+        this.rpcClient = rpcClient;
     }
 }

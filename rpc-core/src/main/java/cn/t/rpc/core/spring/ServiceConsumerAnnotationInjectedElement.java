@@ -1,9 +1,10 @@
 package cn.t.rpc.core.spring;
 
+import cn.t.rpc.core.network.msg.CallMethodMsg;
 import cn.t.rpc.core.service.RemoteServiceConsumerBean;
+import cn.t.util.common.ArrayUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.BeanClassLoaderAware;
 import org.springframework.beans.factory.annotation.InjectionMetadata;
 
 import java.beans.PropertyDescriptor;
@@ -56,8 +57,16 @@ public class ServiceConsumerAnnotationInjectedElement extends InjectionMetadata.
         private RemoteServiceConsumerBean remoteServiceConsumerBean;
 
         @Override
-        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-            return null;
+        public Object invoke(Object proxy, Method method, Object[] args) {
+            CallMethodMsg callMethodMsg = new CallMethodMsg();
+            callMethodMsg.setInterfaceName(remoteServiceConsumerBean.getInterfaceClass().getName());
+            callMethodMsg.setMethodName(method.getName());
+            if(ArrayUtil.isEmpty(args)) {
+                callMethodMsg.setArg(null);
+            } else {
+                callMethodMsg.setArg(args[0]);
+            }
+            return remoteServiceConsumerBean.getRpcClient().callMethod(callMethodMsg);
         }
 
         public ReferenceBeanInvocationHandler(RemoteServiceConsumerBean remoteServiceConsumerBean) {
