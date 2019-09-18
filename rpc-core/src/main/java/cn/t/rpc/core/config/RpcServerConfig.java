@@ -1,7 +1,8 @@
 package cn.t.rpc.core.config;
 
 import cn.t.rpc.core.network.RpcServiceConfig;
-import cn.t.rpc.core.spring.ServiceAnnotationBeanPostProcessor;
+import cn.t.rpc.core.spring.ServiceConsumerAnnotationBeanPostProcessor;
+import cn.t.rpc.core.spring.ServiceProviderAnnotationBeanPostProcessor;
 import cn.t.rpc.core.zookeeper.ZookeeperTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,8 +22,8 @@ public class RpcServerConfig {
     private static final Logger logger = LoggerFactory.getLogger(RpcServerConfig.class);
 
     @Bean
-    public ServiceAnnotationBeanPostProcessor rpcServiceClassPathBeanDefinitionScanner() {
-        return new ServiceAnnotationBeanPostProcessor();
+    public ServiceProviderAnnotationBeanPostProcessor rpcServiceClassPathBeanDefinitionScanner() {
+        return new ServiceProviderAnnotationBeanPostProcessor();
     }
 
     @Bean
@@ -35,6 +36,11 @@ public class RpcServerConfig {
             zookeeperTemplate.connect(rpcServiceConfig.getZookeeper().getRegisterAddress());
         }
         return zookeeperTemplate;
+    }
+
+    @Bean
+    public ServiceConsumerAnnotationBeanPostProcessor serviceConsumerAnnotationBeanPostProcessor() {
+        return new ServiceConsumerAnnotationBeanPostProcessor();
     }
 
 }

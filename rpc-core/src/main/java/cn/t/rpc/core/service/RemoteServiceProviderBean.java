@@ -36,9 +36,9 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
  * create: 2019-09-17 09:51
  * @author: yj
  **/
-public class RemoteService implements ApplicationListener<ContextRefreshedEvent> {
+public class RemoteServiceProviderBean implements ApplicationListener<ContextRefreshedEvent> {
 
-    private static final Logger logger = LoggerFactory.getLogger(RemoteService.class);
+    private static final Logger logger = LoggerFactory.getLogger(RemoteServiceProviderBean.class);
 
     private String interfaceName;
 
@@ -142,7 +142,7 @@ public class RemoteService implements ApplicationListener<ContextRefreshedEvent>
         this.zookeeperTemplate = zookeeperTemplate;
     }
 
-    public RemoteService(RpcServiceConfig rpcServerConfig) {
+    public RemoteServiceProviderBean(RpcServiceConfig rpcServerConfig) {
         this.rpcServerConfig = rpcServerConfig;
     }
 }

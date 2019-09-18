@@ -1,6 +1,6 @@
 package cn.t.rpc.core.spring;
 
-import cn.t.rpc.core.service.RemoteService;
+import cn.t.rpc.core.service.RemoteServiceProviderBean;
 import cn.t.rpc.core.service.RpcServiceProvider;
 import cn.t.rpc.core.util.RpcConfigTool;
 import cn.t.util.common.StringUtil;
@@ -36,9 +36,9 @@ import static org.springframework.core.annotation.AnnotationUtils.findAnnotation
  * create: 2019-09-17 11:52
  * @author: yj
  **/
-public class ServiceAnnotationBeanPostProcessor implements BeanDefinitionRegistryPostProcessor, EnvironmentAware, ResourceLoaderAware, BeanClassLoaderAware {
+public class ServiceProviderAnnotationBeanPostProcessor implements BeanDefinitionRegistryPostProcessor, EnvironmentAware, ResourceLoaderAware, BeanClassLoaderAware {
 
-    private static final Logger logger = LoggerFactory.getLogger(ServiceAnnotationBeanPostProcessor.class);
+    private static final Logger logger = LoggerFactory.getLogger(ServiceProviderAnnotationBeanPostProcessor.class);
 
     private Environment environment;
     private ClassLoader classLoader;
@@ -66,7 +66,7 @@ public class ServiceAnnotationBeanPostProcessor implements BeanDefinitionRegistr
                         RpcServiceProvider rpcServiceProvider = findAnnotation(beanClass, RpcServiceProvider.class);
                         Class<?> interfaceClass = rpcServiceProvider.interfaceClass();
                         String annotatedServiceBeanName = beanDefinitionHolder.getBeanName();
-                        BeanDefinitionBuilder builder = rootBeanDefinition(RemoteService.class);
+                        BeanDefinitionBuilder builder = rootBeanDefinition(RemoteServiceProviderBean.class);
                         AbstractBeanDefinition serviceBeanDefinition = builder.getBeanDefinition();
                         builder.addPropertyReference("ref", annotatedServiceBeanName);
                         builder.addPropertyReference("zookeeperTemplate", "zookeeperTemplate");
