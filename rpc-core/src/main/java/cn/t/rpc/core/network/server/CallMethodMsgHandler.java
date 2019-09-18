@@ -18,5 +18,6 @@ public class CallMethodMsgHandler extends SimpleChannelInboundHandler<CallMethod
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, CallMethodMsg msg) {
         logger.info("收到远程调用请求， 接口: {}, 方法: {}", msg.getInterfaceName(), msg.getMethodName());
+
     }
 }

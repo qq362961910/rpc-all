@@ -37,7 +37,7 @@ public class RpcClient {
         //根据接口名称缓存
         NettyTcpClient tcpClient = tcpClientMap.get(callMethodMsg.getInterfaceName());
         if(tcpClient == null) {
-            RpcServiceConfig.Server server = getProvider(callMethodMsg.getInterfaceName());
+            RpcServiceConfig.ServerConfig server = getProvider(callMethodMsg.getInterfaceName());
             if(server == null) {
                 logger.info("服务: {} 未发现可用端点", callMethodMsg.getInterfaceName());
             } else {
@@ -72,7 +72,7 @@ public class RpcClient {
         }
     }
 
-    private RpcServiceConfig.Server getProvider(String interfaceName) {
+    private RpcServiceConfig.ServerConfig getProvider(String interfaceName) {
         try {
             List<String> nodes = zookeeperTemplate.getChildren("/");
             List<String> interfaceNameList;
@@ -81,13 +81,13 @@ public class RpcClient {
             } else {
                 interfaceNameList = Collections.emptyList();
             }
-            RpcServiceConfig.Server server;
+            RpcServiceConfig.ServerConfig server;
             if(interfaceNameList.contains(interfaceName)) {
                 String serverListStr = zookeeperTemplate.getData("/rpc/services/" + interfaceName);
                 if(StringUtil.isEmpty(serverListStr)) {
                     server = null;
                 } else {
-                    List<RpcServiceConfig.Server> serverList = JsonUtil.deserialize(serverListStr, new TypeReference<ArrayList<RpcServiceConfig.Server>>() {});
+                    List<RpcServiceConfig.ServerConfig> serverList = JsonUtil.deserialize(serverListStr, new TypeReference<ArrayList<RpcServiceConfig.ServerConfig>>() {});
                     if(CollectionUtil.isEmpty(serverList)) {
                         server = null;
                     } else {

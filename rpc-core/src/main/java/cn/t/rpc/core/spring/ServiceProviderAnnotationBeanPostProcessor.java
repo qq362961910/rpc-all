@@ -69,7 +69,6 @@ public class ServiceProviderAnnotationBeanPostProcessor implements BeanDefinitio
                         BeanDefinitionBuilder builder = rootBeanDefinition(RemoteServiceProviderBean.class);
                         AbstractBeanDefinition serviceBeanDefinition = builder.getBeanDefinition();
                         builder.addPropertyReference("ref", annotatedServiceBeanName);
-                        builder.addPropertyReference("zookeeperTemplate", "zookeeperTemplate");
                         builder.addPropertyValue("interfaceName", interfaceClass.getName());
                         String remoteServiceBeanName = "remote:" +  interfaceClass.getName();
                         registry.registerBeanDefinition(remoteServiceBeanName, serviceBeanDefinition);

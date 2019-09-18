@@ -13,27 +13,27 @@ import java.util.Objects;
 @ConfigurationProperties(prefix = RpcConfigTool.PREFIX)
 public class RpcServiceConfig {
 
-    private Server server;
+    private ServerConfig server;
 
-    private Zookeeper zookeeper;
+    private ZookeeperConfig zookeeper;
 
-    public Server getServer() {
+    public ServerConfig getServer() {
         return server;
     }
 
-    public void setServer(Server server) {
+    public void setServer(ServerConfig server) {
         this.server = server;
     }
 
-    public Zookeeper getZookeeper() {
+    public ZookeeperConfig getZookeeper() {
         return zookeeper;
     }
 
-    public void setZookeeper(Zookeeper zookeeper) {
+    public void setZookeeper(ZookeeperConfig zookeeper) {
         this.zookeeper = zookeeper;
     }
 
-    public static class Zookeeper {
+    public static class ZookeeperConfig {
         private String registerAddress;
 
         public String getRegisterAddress() {
@@ -45,7 +45,7 @@ public class RpcServiceConfig {
         }
     }
 
-    public static class Server {
+    public static class ServerConfig {
         private String host;
         private int port;
 
@@ -74,7 +74,7 @@ public class RpcServiceConfig {
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
-            Server server = (Server) o;
+            ServerConfig server = (ServerConfig) o;
             return port == server.port &&
                 Objects.equals(host, server.host);
         }
