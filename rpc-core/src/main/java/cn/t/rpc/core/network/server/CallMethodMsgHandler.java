@@ -1,10 +1,14 @@
 package cn.t.rpc.core.network.server;
 
 import cn.t.rpc.core.network.msg.CallMethodMsg;
+import cn.t.rpc.core.service.RemoteServiceManager;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 /**
  * @description: call method handler
@@ -15,9 +19,36 @@ public class CallMethodMsgHandler extends SimpleChannelInboundHandler<CallMethod
 
     private static final Logger logger = LoggerFactory.getLogger(CallMethodMsgHandler.class);
 
+    private RemoteServiceManager remoteServiceManager;
+
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, CallMethodMsg msg) {
         logger.info("收到远程调用请求， 接口: {}, 方法: {}", msg.getInterfaceName(), msg.getMethodName());
+        Object ref = remoteServiceManager.getRefByInterfaceName(msg.getInterfaceName());
+        if(ref == null) {
+            logger.error("未找到注册的服务类: {}", msg.getInterfaceName());
+            //todo 响应客户端: 未找到注册的服务类
+        } else {
+            try {
+                Method method;
+                if(msg.getArg() == null) {
+                    method = ref.getClass().getDeclaredMethod(msg.getMethodName());
+                    method.invoke(ref);
+                } else {
+                    method = ref.getClass().getDeclaredMethod(msg.getMethodName(), msg.getArg().getClass());
+                    method.invoke(ref, msg.getArg());
+                }
+            } catch (NoSuchMethodException e) {
+                logger.error("未找到服务方法", e);
+                //todo 响应客户端: 异常
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                logger.error("服务方法调用失败", e);
+                //todo 响应客户端: 异常
+            }
+        }
+    }
 
+    public CallMethodMsgHandler(RemoteServiceManager remoteServiceManager) {
+        this.remoteServiceManager = remoteServiceManager;
     }
 }

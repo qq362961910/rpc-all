@@ -43,14 +43,14 @@ public class RpcClient {
             } else {
                 RpcClientNettyChannelInitializer clientNettyChannelInitializer = new RpcClientNettyChannelInitializer();
                 tcpClient = new NettyTcpClient("rpc-client", server.getHost(), server.getPort(), clientNettyChannelInitializer);
+                DefaultLauncher defaultLauncher = new DefaultLauncher();
+                List<DaemonServer> daemonServerList = new ArrayList<>();
+                daemonServerList.add(tcpClient);
+                defaultLauncher.setDaemonServerList(daemonServerList);
+                defaultLauncher.startup();
+                tcpClientMap.put(callMethodMsg.getInterfaceName(), tcpClient);
             }
         }
-        DefaultLauncher defaultLauncher = new DefaultLauncher();
-        List<DaemonServer> daemonServerList = new ArrayList<>();
-        daemonServerList.add(tcpClient);
-        defaultLauncher.setDaemonServerList(daemonServerList);
-        defaultLauncher.startup();
-        tcpClientMap.put(callMethodMsg.getInterfaceName(), tcpClient);
         tcpClient.sendMsg(callMethodMsg);
         RpcServiceUtil.request(callMethodMsg.getInterfaceName(), callMethodMsg.getId());
         Object result = null;
