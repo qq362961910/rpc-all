@@ -15,11 +15,11 @@ public class RpcServiceUtil {
         RESULT_MAP.put(id, null);
     }
 
-    public static Object getRequestResult(Long id) {
+    public static synchronized Object getRequestResult(Long id) {
         return RESULT_MAP.remove(id);
     }
 
-    public static Object setRequestResult(Long id, Object result) {
+    public static synchronized Object setRequestResult(Long id, Object result) {
         return RESULT_MAP.put(id, result);
     }
 
