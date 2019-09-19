@@ -36,7 +36,6 @@ public class RemoteServiceController {
 
     @GetMapping("list")
     public Object list() throws KeeperException, InterruptedException {
-        testService.whoRu();
         List<String> nodes = zookeeperTemplate.getChildren("/");
         List<String> interfaceNameList;
         if(nodes.contains("rpc") && zookeeperTemplate.getChildren("/rpc").contains("services")) {
@@ -49,16 +48,11 @@ public class RemoteServiceController {
         return resultVoWrapper.buildSuccess(data);
     }
 
-    @GetMapping("callM/{interfaceName}/method")
-    public Object callM(@PathVariable("interfaceName") String interfaceName, @PathVariable("method") String method) throws KeeperException, InterruptedException {
-        List<String> interfaceNameList =  zookeeperTemplate.getChildren("/rpc/services");
-        if(!interfaceNameList.contains(interfaceName)) {
-            logger.error("没有此接口");
-            return resultVoWrapper.buildFail();
-        }
+    @GetMapping("callM/{interfaceName}/{method}/{arg}")
+    public Object callM(@PathVariable("interfaceName") String interfaceName, @PathVariable("method") String method, @PathVariable("arg") String arg) {
         String name = testService.whoRu();
         Map<String, Object> data = new HashMap<>();
-        data.put("name", name);
+        data.put("result", name);
         return resultVoWrapper.buildSuccess(data);
     }
 

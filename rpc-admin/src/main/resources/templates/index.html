@@ -20,28 +20,40 @@
         </tbody>
     </table>
     <hr/>
-    <h2>在线服务调用</h2>
-    <div style="width: 50%">
-        <p>接口名称: <input style="width: 50%" type="text" name="interfaceName"></p>
-        <p><button id="callM">调用</button></p>
-    </div>
+    <h2>服务调用结果</h2>
+    <url id="callMethodResult" style="width: 100%">
+
+    </url>
 </div>
 <script type="text/javascript">
+
+    function callM() {
+        $.get("/remote-service/callM/{interfaceName}/method/arg", function(res) {
+            if(res.code === "200") {
+                var result = res.data.result;
+                $("#callMethodResult").append(
+                    "<li>" + result + "</li>"
+                );
+            } else {
+                alert("服务异常");
+            }
+        });
+    }
     $(function() {
         $.get("/remote-service/list", function(res) {
-            if(res && res instanceof Array) {
-                for(var i=0; i<res.length; i++) {
+            if(res.code === "200") {
+                var interfaceNameList = res.data.interfaceNameList;
+                for(var i=0; i<interfaceNameList.length; i++) {
                     $("#record-list").append(
                         "<tr>"
-                            + "<td>"+ res[i] +"</td>"
-                            + "<td><a href='javascript:void(0);'>详情</a></td>"
+                            + "<td>"+ interfaceNameList[i] +"</td>"
+                            + "<td><a onclick='callM();' href='javascript:void(0);'>调用</a></td>"
                       + "</tr>"
                     );
                 }
+            } else {
+                alert("服务异常");
             }
-        });
-        $("#callM").click(function() {
-
         });
     });
 </script>

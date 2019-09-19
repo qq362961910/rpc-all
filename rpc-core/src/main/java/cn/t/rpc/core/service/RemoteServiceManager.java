@@ -1,6 +1,6 @@
 package cn.t.rpc.core.service;
 
-import cn.t.rpc.core.network.RpcServiceConfig;
+import cn.t.rpc.core.config.RpcServiceProperties;
 import cn.t.rpc.core.network.server.RpcSeverNettyChannelInitializer;
 import cn.t.rpc.core.zookeeper.ZookeeperTemplate;
 import cn.t.tool.nettytool.launcher.DefaultLauncher;
@@ -27,11 +27,11 @@ public class RemoteServiceManager {
     private Map<String, Object> serviceRefMapping = new HashMap<>();
     private Map<Integer, DaemonServer> serverMap = new ConcurrentHashMap<>();
     private ZookeeperTemplate zookeeperTemplate;
-    private RpcServiceConfig rpcServiceConfig;
+    private RpcServiceProperties rpcServiceProperties;
 
     public void registerService(ServiceItem serviceItem) {
-        if(rpcServiceConfig != null) {
-            RpcServiceConfig.ServerConfig serverConfig = rpcServiceConfig.getServer();
+        if(rpcServiceProperties != null) {
+            RpcServiceProperties.ServerConfig serverConfig = rpcServiceProperties.getServer();
             if(serverConfig != null) {
                 DaemonServer daemonServer = serverMap.get(serverConfig.getPort());
                 if(daemonServer == null) {
@@ -57,10 +57,10 @@ public class RemoteServiceManager {
         return serviceRefMapping.get(interfaceName);
     }
 
-    private boolean registerToZookeeper(ServiceItem serviceItem, RpcServiceConfig.ServerConfig serverConfig ) {
+    private boolean registerToZookeeper(ServiceItem serviceItem, RpcServiceProperties.ServerConfig serverConfig ) {
         try {
             List<String> nodes = zookeeperTemplate.getChildren("/");
-            Set<RpcServiceConfig.ServerConfig> serviceHostSet = new HashSet<>();
+            Set<RpcServiceProperties.ServerConfig> serviceHostSet = new HashSet<>();
             serviceHostSet.add(serverConfig);
             if(!nodes.contains("rpc")) {
                 zookeeperTemplate.createNode("/rpc", "");
@@ -80,7 +80,7 @@ public class RemoteServiceManager {
                         if(StringUtil.isEmpty(data)) {
                             zookeeperTemplate.setData("/rpc/services/" + serviceItem.getInterfaceName(), JsonUtil.serialize(serviceHostSet));
                         } else {
-                            HashSet<RpcServiceConfig.ServerConfig> oldSet = JsonUtil.deserialize(data, new TypeReference<HashSet<RpcServiceConfig.ServerConfig>>(){});
+                            HashSet<RpcServiceProperties.ServerConfig> oldSet = JsonUtil.deserialize(data, new TypeReference<HashSet<RpcServiceProperties.ServerConfig>>(){});
                             oldSet.addAll(serviceHostSet);
                             zookeeperTemplate.setData("/rpc/services/" + serviceItem.getInterfaceName(), JsonUtil.serialize(oldSet));
                         }
@@ -102,16 +102,16 @@ public class RemoteServiceManager {
         this.zookeeperTemplate = zookeeperTemplate;
     }
 
-    public RpcServiceConfig getRpcServiceConfig() {
-        return rpcServiceConfig;
+    public RpcServiceProperties getRpcServiceProperties() {
+        return rpcServiceProperties;
     }
 
-    public void setRpcServiceConfig(RpcServiceConfig rpcServiceConfig) {
-        this.rpcServiceConfig = rpcServiceConfig;
+    public void setRpcServiceProperties(RpcServiceProperties rpcServiceProperties) {
+        this.rpcServiceProperties = rpcServiceProperties;
     }
 
-    public RemoteServiceManager(ZookeeperTemplate zookeeperTemplate, RpcServiceConfig rpcServiceConfig) {
+    public RemoteServiceManager(ZookeeperTemplate zookeeperTemplate, RpcServiceProperties rpcServiceProperties) {
         this.zookeeperTemplate = zookeeperTemplate;
-        this.rpcServiceConfig = rpcServiceConfig;
+        this.rpcServiceProperties = rpcServiceProperties;
     }
 }

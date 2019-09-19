@@ -1,6 +1,5 @@
 package cn.t.rpc.core.config;
 
-import cn.t.rpc.core.network.RpcServiceConfig;
 import cn.t.rpc.core.network.client.RpcClient;
 import cn.t.rpc.core.service.RemoteServiceManager;
 import cn.t.rpc.core.spring.ServiceConsumerAnnotationBeanPostProcessor;
@@ -17,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
  * create: 2019-09-17 11:47
  * @author: yj
  **/
-@EnableConfigurationProperties(RpcServiceConfig.class)
+@EnableConfigurationProperties(RpcServiceProperties.class)
 @Configuration
 public class RpcServerConfig {
 
@@ -29,13 +28,13 @@ public class RpcServerConfig {
     }
 
     @Bean
-    public ZookeeperTemplate zookeeperTemplate(RpcServiceConfig rpcServiceConfig) throws Exception {
+    public ZookeeperTemplate zookeeperTemplate(RpcServiceProperties rpcServiceProperties) throws Exception {
         ZookeeperTemplate zookeeperTemplate = new ZookeeperTemplate();
-        RpcServiceConfig.ZookeeperConfig zookeeper = rpcServiceConfig.getZookeeper();
+        RpcServiceProperties.ZookeeperConfig zookeeper = rpcServiceProperties.getZookeeper();
         if(zookeeper == null) {
             logger.error("zookeeper config not set");
         } else {
-            zookeeperTemplate.connect(rpcServiceConfig.getZookeeper().getRegisterAddress());
+            zookeeperTemplate.connect(rpcServiceProperties.getZookeeper().getRegisterAddress());
         }
         return zookeeperTemplate;
     }
@@ -51,8 +50,8 @@ public class RpcServerConfig {
     }
 
     @Bean
-    public RemoteServiceManager remoteServiceManager(ZookeeperTemplate zookeeperTemplate, RpcServiceConfig rpcServiceConfig) {
-        return new RemoteServiceManager(zookeeperTemplate, rpcServiceConfig);
+    public RemoteServiceManager remoteServiceManager(ZookeeperTemplate zookeeperTemplate, RpcServiceProperties rpcServiceProperties) {
+        return new RemoteServiceManager(zookeeperTemplate, rpcServiceProperties);
     }
 
 }

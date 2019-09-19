@@ -1,6 +1,6 @@
 package cn.t.rpc.core.network.client;
 
-import cn.t.rpc.core.network.RpcServiceConfig;
+import cn.t.rpc.core.config.RpcServiceProperties;
 import cn.t.rpc.core.network.msg.CallMethodMsg;
 import cn.t.rpc.core.network.msg.InternalMsg;
 import cn.t.rpc.core.util.RpcServiceUtil;
@@ -38,7 +38,7 @@ public class RpcClient {
         //根据接口名称缓存
         NettyTcpClient tcpClient = tcpClientMap.get(callMethodMsg.getInterfaceName());
         if(tcpClient == null) {
-            RpcServiceConfig.ServerConfig server = getProvider(callMethodMsg.getInterfaceName());
+            RpcServiceProperties.ServerConfig server = getProvider(callMethodMsg.getInterfaceName());
             if(server == null) {
                 logger.info("服务: {} 未发现可用端点", callMethodMsg.getInterfaceName());
             } else {
@@ -73,7 +73,7 @@ public class RpcClient {
         return result;
     }
 
-    private RpcServiceConfig.ServerConfig getProvider(String interfaceName) {
+    private RpcServiceProperties.ServerConfig getProvider(String interfaceName) {
         try {
             List<String> nodes = zookeeperTemplate.getChildren("/");
             List<String> interfaceNameList;
@@ -82,13 +82,13 @@ public class RpcClient {
             } else {
                 interfaceNameList = Collections.emptyList();
             }
-            RpcServiceConfig.ServerConfig server;
+            RpcServiceProperties.ServerConfig server;
             if(interfaceNameList.contains(interfaceName)) {
                 String serverListStr = zookeeperTemplate.getData("/rpc/services/" + interfaceName);
                 if(StringUtil.isEmpty(serverListStr)) {
                     server = null;
                 } else {
-                    List<RpcServiceConfig.ServerConfig> serverList = JsonUtil.deserialize(serverListStr, new TypeReference<ArrayList<RpcServiceConfig.ServerConfig>>() {});
+                    List<RpcServiceProperties.ServerConfig> serverList = JsonUtil.deserialize(serverListStr, new TypeReference<ArrayList<RpcServiceProperties.ServerConfig>>() {});
                     if(CollectionUtil.isEmpty(serverList)) {
                         server = null;
                     } else {

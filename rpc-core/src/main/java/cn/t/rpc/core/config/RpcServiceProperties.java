@@ -1,4 +1,4 @@
-package cn.t.rpc.core.network;
+package cn.t.rpc.core.config;
 
 import cn.t.rpc.core.util.RpcConfigTool;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -11,7 +11,7 @@ import java.util.Objects;
  * @author: yj
  **/
 @ConfigurationProperties(prefix = RpcConfigTool.PREFIX)
-public class RpcServiceConfig {
+public class RpcServiceProperties {
 
     private ServerConfig server;
 
