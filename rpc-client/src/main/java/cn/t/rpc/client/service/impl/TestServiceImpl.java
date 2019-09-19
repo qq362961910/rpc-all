@@ -13,11 +13,13 @@ import org.slf4j.LoggerFactory;
 @RpcServiceProvider(interfaceClass = TestService.class)
 public class TestServiceImpl implements TestService {
 
+    private int index = 0;
+
     private static final Logger logger = LoggerFactory.getLogger(TestServiceImpl.class);
 
     @Override
     public String whoRu() {
         logger.info("method run: whoRu");
-        return "xiao ming";
+        return "xiao ming: " + index++;
     }
 }

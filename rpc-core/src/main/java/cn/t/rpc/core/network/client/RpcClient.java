@@ -53,15 +53,14 @@ public class RpcClient {
             }
         }
         tcpClient.sendMsg(callMethodMsg);
-        RpcServiceUtil.request(callMethodMsg.getId());
         Object result = null;
         int sleepCount = 0;
         while (sleepCount < 5) {
-            System.out.println("结果集合: " + RpcServiceUtil.getAllResults());
             result = RpcServiceUtil.getRequestResult(callMethodMsg.getId());
             if(result != null) {
                 break;
             } else {
+                System.out.println("结果集合: " + RpcServiceUtil.getAllResults());
                 sleepCount++;
                 try { Thread.sleep(1000); } catch (InterruptedException e) { e.printStackTrace(); }
             }
