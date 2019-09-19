@@ -28,6 +28,8 @@ public class RpcCallMethodMsgEncoder extends NettyTcpEncoder<CallMethodMsg> {
         //length
         int lengthIndex = byteBuf.writerIndex();
         byteBuf.writeZero(4);
+        //id
+        byteBuf.writeLong(msg.getId());
         //interface
         byte[] interfaceNameBytes = msg.getInterfaceName().getBytes();
         byteBuf.writeShort(interfaceNameBytes.length);

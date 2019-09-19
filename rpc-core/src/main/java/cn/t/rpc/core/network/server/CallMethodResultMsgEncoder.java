@@ -22,7 +22,13 @@ public class CallMethodResultMsgEncoder extends NettyTcpEncoder<CallMethodResult
 
     @Override
     protected void doEncode(CallMethodResultMsg msg, ByteBuf byteBuf) {
-        byteBuf.writeByte(MsgType.METHOD_RESULT.value);
+        //type
+        byteBuf.writeByte(MsgType.METHOD_CALL_RESULT.value);
+        //length
+        int lengthIndex = byteBuf.writerIndex();
+        byteBuf.writeZero(4);
+        //id
+        byteBuf.writeLong(msg.getId());
         //result
         if(msg.getResult() == null) {
             byteBuf.writeInt(0);
@@ -39,5 +45,7 @@ public class CallMethodResultMsgEncoder extends NettyTcpEncoder<CallMethodResult
                 logger.error("调用远程方法失败", e);
             }
         }
+        int length = byteBuf.writerIndex() - lengthIndex - 4;
+        byteBuf.setInt(lengthIndex, length);
     }
 }

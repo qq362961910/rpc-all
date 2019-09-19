@@ -2,6 +2,7 @@ package cn.t.rpc.core.network.client;
 
 import cn.t.rpc.core.network.RpcServiceConfig;
 import cn.t.rpc.core.network.msg.CallMethodMsg;
+import cn.t.rpc.core.network.msg.InternalMsg;
 import cn.t.rpc.core.util.RpcServiceUtil;
 import cn.t.rpc.core.zookeeper.ZookeeperTemplate;
 import cn.t.tool.nettytool.client.NettyTcpClient;
@@ -52,11 +53,11 @@ public class RpcClient {
             }
         }
         tcpClient.sendMsg(callMethodMsg);
-        RpcServiceUtil.request(callMethodMsg.getInterfaceName(), callMethodMsg.getId());
+        RpcServiceUtil.request(callMethodMsg.getId());
         Object result = null;
         int sleepCount = 0;
         while (sleepCount < 3) {
-            result = RpcServiceUtil.getRequestResult(callMethodMsg.getInterfaceName(), callMethodMsg.getId());
+            result = RpcServiceUtil.getRequestResult(callMethodMsg.getId());
             if(result != null) {
                 break;
             } else {
@@ -66,10 +67,10 @@ public class RpcClient {
         }
         if(result == null) {
             logger.info("rpc 远程调用失败");
-            return null;
-        } else {
-            return result;
+        } else if(result instanceof InternalMsg) {
+            result = ((InternalMsg)result).result;
         }
+        return result;
     }
 
     private RpcServiceConfig.ServerConfig getProvider(String interfaceName) {

@@ -9,10 +9,6 @@ public class CallMethodResultMsg {
 
     private long id;
 
-    private String interfaceName;
-
-    private String methodName;
-
     private Object result;
 
     public long getId() {
@@ -23,27 +19,28 @@ public class CallMethodResultMsg {
         this.id = id;
     }
 
-    public String getInterfaceName() {
-        return interfaceName;
-    }
-
-    public void setInterfaceName(String interfaceName) {
-        this.interfaceName = interfaceName;
-    }
-
-    public String getMethodName() {
-        return methodName;
-    }
-
-    public void setMethodName(String methodName) {
-        this.methodName = methodName;
-    }
-
     public Object getResult() {
         return result;
     }
 
     public void setResult(Object result) {
         this.result = result;
+    }
+
+    public CallMethodResultMsg() {
+    }
+
+    public CallMethodResultMsg(long id, Object result) {
+        this.id = id;
+        this.result = result;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("CallMethodResultMsg{");
+        sb.append("id=").append(id);
+        sb.append(", result=").append(result);
+        sb.append('}');
+        return sb.toString();
     }
 }

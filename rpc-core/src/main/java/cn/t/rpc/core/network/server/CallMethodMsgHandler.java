@@ -42,8 +42,6 @@ public class CallMethodMsgHandler extends SimpleChannelInboundHandler<CallMethod
                 }
                 CallMethodResultMsg callMethodResultMsg = new CallMethodResultMsg();
                 callMethodResultMsg.setId(msg.getId());
-                callMethodResultMsg.setInterfaceName(msg.getInterfaceName());
-                callMethodResultMsg.setMethodName(msg.getMethodName());
                 callMethodResultMsg.setResult(result);
                 ctx.writeAndFlush(callMethodResultMsg);
             } catch (NoSuchMethodException e) {

@@ -59,6 +59,7 @@ public class ServiceConsumerAnnotationInjectedElement extends InjectionMetadata.
         @Override
         public Object invoke(Object proxy, Method method, Object[] args) {
             CallMethodMsg callMethodMsg = new CallMethodMsg();
+            callMethodMsg.setId(System.currentTimeMillis());
             callMethodMsg.setInterfaceName(remoteServiceConsumerBean.getInterfaceClass().getName());
             callMethodMsg.setMethodName(method.getName());
             if(ArrayUtil.isEmpty(args)) {

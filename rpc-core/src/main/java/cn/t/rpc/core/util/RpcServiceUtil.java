@@ -9,19 +9,17 @@ import java.util.Map;
  * @author: yj
  **/
 public class RpcServiceUtil {
-    private static Map<String, Map<Long, Object>> RESULT_MAP = new HashMap<>();
+    private static  Map<Long, Object> RESULT_MAP = new HashMap<>();
 
-    public static void request(String interfaceName, Long id) {
-        Map<Long, Object> map = RESULT_MAP.computeIfAbsent(interfaceName, k -> new HashMap<>());
-        map.put(id, null);
+    public static void request(Long id) {
+        RESULT_MAP.put(id, null);
     }
 
-    public static Object getRequestResult(String interfaceName, Long id) {
-        Map<Long, Object> map = RESULT_MAP.get(interfaceName);
-        if(map == null) {
-            return null;
-        } else {
-            return map.get(id);
-        }
+    public static Object getRequestResult(Long id) {
+        return RESULT_MAP.remove(id);
+    }
+
+    public static Object setRequestResult(Long id, Object result) {
+        return RESULT_MAP.put(id, result);
     }
 }

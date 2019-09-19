@@ -4,7 +4,7 @@ public enum MsgType {
 
     METHOD_CALL((byte)1),
 
-    METHOD_RESULT((byte)2)
+    METHOD_CALL_RESULT((byte)2)
     ;
 
     public final byte value;
