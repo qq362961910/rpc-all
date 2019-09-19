@@ -1,4 +1,4 @@
-package cn.t.rpc.admin.dao;
+package cn.t.rpc.admin.schedule;
 
 import cn.t.rpc.admin.entity.FixedRateTask;
 import io.netty.util.HashedWheelTimer;

@@ -1,6 +1,6 @@
 package cn.t.rpc.admin.service.impl;
 
-import cn.t.rpc.admin.dao.TaskManager;
+import cn.t.rpc.admin.schedule.TaskManager;
 import cn.t.rpc.admin.entity.FixedRateTask;
 import cn.t.rpc.admin.service.TaskService;
 import cn.t.rpc.core.network.client.RpcClient;
