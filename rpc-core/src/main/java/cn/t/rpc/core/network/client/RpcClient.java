@@ -71,6 +71,7 @@ public class RpcClient {
         } else if(result instanceof InternalMsg) {
             result = ((InternalMsg)result).result;
         }
+        RpcServiceUtil.clearRequestResult(callMethodMsg.getId());
         return result;
     }
 
