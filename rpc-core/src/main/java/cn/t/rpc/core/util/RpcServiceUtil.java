@@ -9,7 +9,7 @@ import java.util.Map;
  * @author: yj
  **/
 public class RpcServiceUtil {
-    private static  Map<Long, Object> RESULT_MAP = new HashMap<>();
+    private static volatile Map<Long, Object> RESULT_MAP = new HashMap<>();
 
     public static void request(Long id) {
         RESULT_MAP.put(id, null);
