@@ -56,7 +56,7 @@ public class RpcClient {
         RpcServiceUtil.request(callMethodMsg.getId());
         Object result = null;
         int sleepCount = 0;
-        while (sleepCount < 3) {
+        while (sleepCount < 5) {
             result = RpcServiceUtil.getRequestResult(callMethodMsg.getId());
             if(result != null) {
                 break;
