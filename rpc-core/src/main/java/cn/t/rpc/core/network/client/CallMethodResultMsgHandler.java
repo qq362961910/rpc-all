@@ -20,5 +20,6 @@ public class CallMethodResultMsgHandler extends SimpleChannelInboundHandler<Call
     protected void channelRead0(ChannelHandlerContext ctx, CallMethodResultMsg msg) {
         logger.info("{}", msg);
         RpcServiceUtil.setRequestResult(msg.getId(), msg.getResult());
+        logger.info("存储响应结果: {}", RpcServiceUtil.getRequestResult(msg.getId()));
     }
 }
