@@ -66,7 +66,8 @@ public class RpcClient {
             }
         }
         if(result == null) {
-            logger.info("rpc 远程调用失败");
+            logger.info("rpc 远程调用失败, request id: {}", callMethodMsg.getId());
+            System.out.println(RpcServiceUtil.getAllResults());
         } else if(result instanceof InternalMsg) {
             result = ((InternalMsg)result).result;
         }

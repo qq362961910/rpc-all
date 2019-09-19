@@ -22,4 +22,8 @@ public class RpcServiceUtil {
     public static Object setRequestResult(Long id, Object result) {
         return RESULT_MAP.put(id, result);
     }
+
+    public static Map<Long, Object> getAllResults() {
+        return RESULT_MAP;
+    }
 }
